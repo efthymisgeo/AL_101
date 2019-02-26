@@ -2,16 +2,15 @@ import numpy as np
 import pickle
 import os
 from model.ActiveRound import TheAlgorithm
-
+from sklearn.model_selection import train_test_split
 
 def split(X, y, train_size):
-    '''' Function that splits dataset
-    INPUT MUST BE INT
-    Returns Train and Test Dataset'''
-    X_train_full = X[:train_size]
-    y_train_full = y[:train_size]
-    X_test = X[train_size:]
-    y_test = y[train_size:]
+    '''' Function that shuffles and then
+    splits dataset Returns Train and
+    Test Dataset'''
+    X_train_full, X_test, y_train_full, y_test = \
+        train_test_split(X, y, test_size = 1-train_size,
+                         random_state=69)
     return (X_train_full, y_train_full, X_test, y_test)
 
 def pickle_save(fname, data):
@@ -34,7 +33,9 @@ def pickle_load(fname):
 
 
 
-def experiment(d, models, selection_functions, Ks, repeats, contfrom, max_queried):
+def experiment(d, models, selection_functions,
+               Ks, repeats, contfrom, max_queried,
+               initial_dataset):
     '''This is the main script that is run in every AL round
     INPUTS
      d : model dictionary
@@ -44,7 +45,7 @@ def experiment(d, models, selection_functions, Ks, repeats, contfrom, max_querie
      repeats :  int
      contfrom:
      max_queried: max_samples queried '''
-
+    (X_train_full, y_train_full, X_test, y_test) = initial_dataset
     algos_temp = []
     print('stopping at:', max_queried)
     count = 0
@@ -70,7 +71,7 @@ def experiment(d, models, selection_functions, Ks, repeats, contfrom, max_querie
                         print('Count = %s, using model = %s, selection_function = %s, k = %s, iteration = %s.' % (
                         count, model_object.__name__, selection_function.__name__, k, i))
                         alg = TheAlgorithm(k,model_object,selection_function)
-                        alg.run(X_train_full, y_train_full, X_test, y_test)
+                        alg.run(X_train_full, y_train_full, X_test, y_test, max_queried)
                         d[model_object.__name__][selection_function.__name__][str(k)].append(alg.clf_model.accuracies)
                         fname = 'Active-learning-experiment-' + str(count) + '.pkl'
                         pickle_save(fname, d)

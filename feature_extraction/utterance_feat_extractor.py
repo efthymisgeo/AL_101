@@ -18,9 +18,10 @@ def FeatureExtractor():
             'neutral': 6}
     y = np.zeros((535,), dtype=int)
     X = np.zeros((535, 128*41))
+    utt_id = 0
     for speaker in a:
-        for i,utt in enumerate(a[speaker]):
-            y[i] = emos[a[speaker][utt]['emotion']]
+        for utt in a[speaker]:
+            y[utt_id] = emos[a[speaker][utt]['emotion']]
             audio_sig = a[speaker][utt]['wav']
             fs = a[speaker][utt]['Fs']
             dur = a[speaker][utt]['wav_duration']
@@ -28,7 +29,8 @@ def FeatureExtractor():
                                                    sr = fs,
                                                    n_fft = 2000,
                                                    hop_length = int(400*dur))
-            X[i,:] = mfccs.reshape(-1)
+            X[utt_id,:] = mfccs.reshape(-1)
+            utt_id += 1
     utt_path = 'extracted_features/utterance'
     filename = os.path.join(utt_path, "X.out.npy")
     save_dir = os.path.abspath(filename)

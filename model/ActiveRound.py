@@ -1,6 +1,7 @@
 from sklearn.utils import check_random_state
 from model.Normalize import Normalize
 from model.TrainModel import TrainModel
+import numpy as np
 
 
 class TheAlgorithm(object):
@@ -11,11 +12,11 @@ class TheAlgorithm(object):
         self.model_object = model_object
         self.sample_selection_function = selection_function
 
-    def get_k_random_samples(initial_labeled_samples, X_train_full,
-                             y_train_full):
+    def get_k_random_samples(self, X_train_full, y_train_full):
         random_state = check_random_state(0)
+        trainset_size = X_train_full.shape[0]
         permutation = np.random.choice(trainset_size,
-                                       initial_labeled_samples,
+                                       self.initial_labeled_samples,
                                        replace=False)
         print()
         print('initial random chosen samples', permutation.shape)
@@ -35,12 +36,11 @@ class TheAlgorithm(object):
         )
         return (permutation, X_train, y_train)
 
-    def run(self, X_train_full, y_train_full, X_test, y_test):
+    def run(self, X_train_full, y_train_full, X_test, y_test, max_queried):
         # initialize process by applying base learner to labeled training data set to obtain Classifier
 
-        (permutation, X_train, y_train) = \
-            get_k_random_samples(self.initial_labeled_samples,
-                                 X_train_full, y_train_full)
+        (permutation, X_train, y_train) = self.get_k_random_samples(X_train_full,
+                                                                    y_train_full)
         self.queried = self.initial_labeled_samples
         self.samplecount = [self.initial_labeled_samples]
 

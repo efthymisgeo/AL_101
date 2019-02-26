@@ -1,3 +1,6 @@
+import numpy as np
+from sklearn.utils import check_random_state
+
 class BaseSelectionFunction(object):
 
     def __init__(self):
