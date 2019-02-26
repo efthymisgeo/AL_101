@@ -1,4 +1,5 @@
 import numpy as np
+import json
 import pickle
 import os
 from model.ActiveRound import TheAlgorithm
@@ -16,7 +17,9 @@ def split(X, y, train_size):
 def pickle_save(fname, data):
     '''function that saves current model's
     accuracies et. all'''
-    filehandler = open(fname, "wb")
+    filename = os.path.join('experiment_instances', fname)
+    save_dir = os.path.abspath(filename)
+    filehandler = open(save_dir, "wb")
     pickle.dump(data, filehandler)
     filehandler.close()
     print('saved', fname, os.getcwd(), os.listdir())
@@ -25,7 +28,8 @@ def pickle_load(fname):
     '''function that loads previous accuracies
     in order to resume training'''
     print(os.getcwd(), os.listdir())
-    file = open(fname, 'rb')
+    filename = os.path.abspath(os.path.join('experiment_instances', fname))
+    file = open(filename, 'rb')
     data = pickle.load(file)
     file.close()
     print(data)
