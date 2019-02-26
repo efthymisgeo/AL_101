@@ -29,8 +29,17 @@ def FeatureExtractor():
                                                    n_fft = 2000,
                                                    hop_length = int(400*dur))
             X[i,:] = mfccs.reshape(-1)
-    save_dir = os.path.abspath(os.path.join(os.pardir, 'extracted_features/utterance'))
-    np.save(save_dir + '/X.out', X)
-    np.save(save_dir + '/y.out', y)
+    utt_path = 'extracted_features/utterance'
+    filename = os.path.join(utt_path, "X.out.npy")
+    save_dir = os.path.abspath(filename)
+    #fd = open(save_dir, 'w')
+    np.save(save_dir, X)
+    #os.close(fd)
+    filename = os.path.join(utt_path, "y.out.npy")
+    save_dir = os.path.abspath(filename)
+    #fd = open(save_dir, 'w')
+    np.save(save_dir, y)
+    #os.close(fd)
+    save_dir = os.path.join(os.pardir, utt_path)
     return(X, y, save_dir)
 
