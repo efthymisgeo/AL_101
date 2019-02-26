@@ -1,4 +1,5 @@
 import numpy as np
+import json
 import os
 from dataloader.feature_loader import load_feats
 from utils.helper_functions import split, experiment
@@ -8,7 +9,7 @@ from model.BaseSelectionFunction import RandomSelection, MarginSamplingSelection
 
 X, y = load_feats()
 
-trainset_size = 0.8
+trainset_size = 0.85
 initial_dataset = split(X, y, trainset_size)
 (X_train_full, y_train_full, X_test, y_test) = initial_dataset
 print('train:', X_train_full.shape, y_train_full.shape)
@@ -17,14 +18,14 @@ classes = len(np.unique(y))
 print('unique classes', classes)
 
 ### active learning rounds
-max_queried = 5
+max_queried = 9
 
-repeats = 1
+repeats = 4
 #models = [SvmModel, RfModel, LogModel]
 models = [SvmModel]
 selection_functions = [RandomSelection, MarginSamplingSelection, EntropySelection]
 
-Ks = [25, 15, 10, 5]
+Ks = [50]
 
 d = {}
 stopped_at = -1
